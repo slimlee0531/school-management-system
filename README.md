@@ -202,3 +202,210 @@ school-management-system/
 ---
 
 ⭐️ 如果你觉得这个项目有帮助，请给我们一个 star！⭐️
+
+---
+
+# School Management System
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-17-blue.svg">
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.5.4-green.svg">
+  <img src="https://img.shields.io/badge/Vue-3-orange.svg">
+  <img src="https://img.shields.io/badge/MySQL-8.0-blue.svg">
+  <img src="https://img.shields.io/badge/Element%20Plus-2.4.4-blue.svg">
+</p>
+
+## 📋 Project Introduction
+
+A comprehensive school management system based on front-end and back-end separation architecture, providing complete school operation and teaching management functions. The system uses Java Spring Boot as the back-end framework and Vue 3 as the front-end framework, implementing core functional modules such as employee management, student management, class management, and department management.
+
+## ✨ Core Functions
+
+- **👥 Employee Management**: CRUD operations for employee information, pagination query, head teacher information management
+- **🎓 Student Management**: Student information management, disciplinary record processing, pagination query
+- **🏫 Class Management**: Class information maintenance, student division management
+- **🏢 Department Management**: School department organizational structure management
+- **🔐 Permission Authentication**: JWT-based user authentication and authorization
+- **📊 Data Reports**: Various statistical report generation
+- **📁 File Management**: Integrated Alibaba Cloud OSS for file storage
+
+### Security Enhancement Features
+- **JWT Token Authentication**: JWT token verification mechanism implemented using Filter
+- **Password Security Management**: Complete password modification process, including old password verification, new password strength check, and password change log recording
+- **Sensitive Information Protection**: Database passwords and cloud service keys are read from environment variables to avoid hardcoding in configuration files
+- **ThreadLocal Optimization**: Safe management of thread-local variables using CurrentHolder utility class to prevent memory leaks
+
+## 🔒 Security Architecture Details
+
+The project has undergone a comprehensive security upgrade, adopting a multi-layered security protection strategy. Here are the specific implementation details:
+
+### JWT Authentication Mechanism
+- **Filter Implementation**: Using `TokenFilter` filter instead of the original interceptor scheme for more efficient authentication processing
+- **Complete Token Lifecycle Management**:
+  - Generate JWT token containing user ID and name upon login
+  - Pass Token through `Authorization` header during requests
+  - Filter verifies Token validity and parses user information
+  - Store current user context using ThreadLocal
+  - Clean up ThreadLocal resources after request to prevent memory leaks
+- **Token Configuration**: Key and expiration time (default 30 minutes) can be configured in `application.yml`
+
+### Password Security Management
+- **Password Modification Process**:
+  - Verify correctness of old password
+  - New password strength check (length 6-20 characters)
+  - Prevent new password from being the same as old password
+  - Double verification mechanism (both front-end and back-end verification)
+- **Transaction Management**: Password modification and log recording ensure atomicity through `@Transactional` annotation
+- **Operation Logging**: Detailed logs are recorded for each password change, including operator, time, etc.
+
+### Sensitive Information Protection
+- **Environment Variable Reading**: Database password (`DB_PASSWORD`) and Alibaba Cloud OSS keys (`ALIYUN_OSS_*`) are read from environment variables
+- **Default Value Handling**: Secure default values are provided for development environment to facilitate local development and testing
+- **Configuration File Isolation**: Sensitive configurations are separated from code for easy deployment and management in different environments
+
+### ThreadLocal Usage Optimization
+- Using `CurrentHolder` utility class to uniformly manage thread-local variables
+- Providing a complete `remove()` method to ensure resource cleanup at the end of requests
+- Adopting `InheritableThreadLocal` to support context transfer in thread pool environments
+
+## 🛠 Tech Stack
+
+### Backend
+- **Framework**: Spring Boot 3.5.4
+- **ORM**: MyBatis
+- **Database**: MySQL 8.0
+- **Authentication**: JWT (JSON Web Token)
+- **File Storage**: Alibaba Cloud OSS
+- **Pagination**: PageHelper
+- **Logging**: SLF4J + Lombok
+
+### Frontend
+- **Framework**: Vue 3
+- **UI Component Library**: Element Plus 2.4.4
+- **Routing**: Vue Router 4.1.5
+- **HTTP Client**: Axios 1.7.2
+- **Charts**: ECharts 6.0.0
+- **Build Tool**: Vite 3.0.9
+- **Code Standard**: ESLint + Prettier
+
+## 📁 Project Structure
+
+```
+school-management-system/
+├── backend/                # Backend code directory
+│   ├── tlias-management/   # Main project module
+│   └── ...                 # Other functional modules
+├── frontend/               # Frontend code directory
+│   ├── src/                # Frontend source code
+│   │   ├── api/            # API interface definitions
+│   │   ├── components/     # Common components
+│   │   ├── router/         # Routing configuration
+│   │   ├── views/          # Page views
+│   │   └── utils/          # Utility functions
+│   └── ...                 # Configuration files
+└── README.md               # Project description document
+```
+
+## 🚀 Quick Start
+
+### Environment Requirements
+- JDK 17+
+- Node.js 16+
+- MySQL 8.0+
+- Maven 3.8+
+
+### Environment Variable Configuration
+
+To ensure system security, the following sensitive information **must** be configured through environment variables, **never** hardcoded in code or configuration files:
+
+> ⚠️ **Security Warning**: Never expose passwords, keys, and other sensitive information in public code repositories, README, or configuration files!
+
+| Environment Variable Name | Description | Suggested Value | Notes |
+|-------------------------|-------------|----------------|------|
+| `DB_PASSWORD` | Database password | Not provided | Development environment can set temporary password, production environment must use strong password |
+| `ALIYUN_OSS_ACCESS_KEY_ID` | Alibaba Cloud OSS access key ID | Not provided | Must be set for production environment, optional for development environment |
+| `ALIYUN_OSS_ACCESS_KEY_SECRET` | Alibaba Cloud OSS access key Secret | Not provided | Must be set for production environment, optional for development environment |
+| `JWT_SECRET` | JWT signature key | Not provided | Must use at least 32-bit random complex string |
+
+**Security Configuration Best Practices**:
+
+- **Development Environment**: Set environment variables in IDE run configurations, do not commit to version control
+- **Testing Environment**: Use CI/CD variables or key management systems to inject environment variables
+- **Production Environment**: Use cloud service key management services or container platform secret management features
+- **Key Rotation**: Regularly change sensitive keys, especially after personnel changes
+
+**Implementation in Configuration Files**:
+
+- Database password: Read from environment variables, configuration example: `password: ${DB_PASSWORD:}`
+- JWT key: Currently configured with default value for simplified development, should be read from environment variables in production
+- Alibaba Cloud OSS keys: Read from environment variables, no default values
+
+### Backend Startup
+1. Clone project code
+   ```bash
+   git clone https://github.com/yourusername/school-management-system.git
+   cd school-management-system
+   ```
+
+2. Configure database
+   - Create MySQL database: `tlias_management`
+   - Modify database connection information in `backend/tlias-management/src/main/resources/application.yml`
+
+3. Build and start backend service
+   ```bash
+   cd backend/tlias-management
+   mvn clean package
+   java -jar target/tlias-management-0.0.1-SNAPSHOT.jar
+   ```
+
+### Frontend Startup
+1. Install dependencies
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+2. Start development server
+   ```bash
+   npm run dev
+   ```
+
+3. Browser access: [http://localhost:5173](http://localhost:5173)
+
+## 🔑 Key API Interfaces
+
+### Employee Management
+- **GET /emps** - Pagination query of employee information
+- **POST /emps** - Add new employee
+- **PUT /emps** - Modify employee information
+- **DELETE /emps** - Batch delete employees
+- **GET /emps/{id}** - Query single employee details
+- **GET /emps/list** - Query all head teacher information
+
+### Student Management
+- **GET /students** - Pagination query of student information
+- **POST /students** - Add student
+- **PUT /students** - Modify student information
+- **DELETE /students/{ids}** - Batch delete students
+- **GET /students/{id}** - Query student by ID
+- **PUT /students/violation/{id}/{score}** - Handle student disciplinary information
+
+## 🤝 Contribution Guide
+
+1. Fork this repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+## 📧 Contact Us
+
+For questions or suggestions, please contact the project maintainers
+
+---
+
+⭐️ If you find this project helpful, please give us a star! ⭐️
