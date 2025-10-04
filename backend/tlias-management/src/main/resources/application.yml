@@ -36,8 +36,9 @@ logging:
 
 #JWT配置
 jwt:
-  # 生成的复杂密钥，建议在生产环境中从环境变量获取
-  secret: 'Xy9P@7kL!2mNq3Rf8Sw*5zVb4Gh6DcEt'
+  # 从环境变量中读取JWT密钥，开发环境可提供默认值
+  # 生产环境必须通过环境变量设置复杂密钥
+  secret: ${JWT_SECRET:default_dev_secret_should_be_changed}
   # 令牌有效期，单位：分钟（建议15-30分钟）
   expire: 30
 
