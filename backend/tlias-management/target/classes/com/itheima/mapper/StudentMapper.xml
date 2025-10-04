@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.StudentMapper">
+
+    <!--学员信息分页查询-->
+    <select id="getPage" resultType="com.itheima.pojo.Student">
+        select s.*, c.name from student s left join clazz c on s.clazz_id = c.id
+            <where>
+                <if test="name != null and name != ''">
+                    s.name like concat('%', #{name}, '%')
+                </if>
+                <if test="degree != null">
+                    and s.degree = #{degree}
+                </if>
+                <if test="clazzId != null">
+                    and s.clazz_id = #{clazzId}
+                </if>
+            </where>
+    </select>
+
+    <!--添加学员-->
+    <insert id="addStudent">
+        insert into student(name, no, gender, phone, id_card, is_college, address, degree, graduation_date, clazz_id ) values
+        (#{name}, #{no}, #{gender}, #{phone}, #{idCard}, #{isCollege}, #{address}, #{degree}, #{graduationDate}, #{clazzId})
+    </insert>
+
+    <!--根据ID查学生-->
+    <select id="getStudentById" resultType="com.itheima.pojo.Student">
+        select * from student where id = #{id}
+    </select>
+
+    <!--修改学生信息-->
+    <update id="updateStudent">
+        update student
+        <set>
+            <if test="name != null and name != ''">name = #{name}, </if>
+            <if test="no != null and no != ''">no = #{no}, </if>
+            <if test="gender != null">gender = #{gender}, </if>
+            <if test="phone != null and phone != ''">phone = #{phone}, </if>
+            <if test="degree != null">degree = #{degree}, </if>
+            <if test="idCard != null and idCard != ''">id_card = #{idCard}, </if>
+            <if test="isCollege != null">is_college = #{isCollege}, </if>
+            <if test="address != null and address != ''">address = #{address}, </if>
+            <if test="graduationDate != null">graduation_date = #{graduationDate}, </if>
+            <if test="violationCount != null">violation_count = #{violationCount}, </if>
+            <if test="violationScore != null">violation_score = #{violationScore}, </if>
+            <if test="clazzId != null">clazz_id = #{clazzId}, </if>
+            <if test="updateTime != null">update_time = #{updateTime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--批量删除学生信息-->
+    <delete id="deleteStudents">
+        delete from student where id in
+            <foreach collection="array" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+    </delete>
+
+    <!--违纪信息处理-->
+    <update id="updateViolation">
+        update student set
+            violation_count = violation_count + 1,
+            violation_score = violation_score + #{score}
+        where id = #{id}
+    </update>
+
+</mapper>
+
+

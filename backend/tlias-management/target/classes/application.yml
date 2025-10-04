@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: tlias-web-management
+  #配置数据库的连接信息
+  datasource:
+    url: jdbc:mysql://localhost:3306/tlias
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    # 从环境变量中读取数据库密码，开发环境可在IDE中配置环境变量
+    # 生产环境应在启动脚本或环境变量中设置此值
+    password: ${DB_PASSWORD:123456}
+
+  #Mybatis的相关配置
+  mybatis:
+    configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  servlet:
+    multipart:
+      #最大单个文件大小
+      max-file-size: 10MB
+      #最大请求大小（包括所有文件和表单数据）
+      max-request-size: 100MB
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  reasonable: true
+  helper-dialect: mysql
+
+#配置事务管理日志级别
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: info
+
+#JWT配置
+jwt:
+  # 生成的复杂密钥，建议在生产环境中从环境变量获取
+  secret: 'Xy9P@7kL!2mNq3Rf8Sw*5zVb4Gh6DcEt'
+  # 令牌有效期，单位：分钟（建议15-30分钟）
+  expire: 30
+
+#阿里云OSS
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    bucketName: slim-java-web-01
+    region: cn-beijing
+    # 从环境变量中读取阿里云OSS的访问密钥，开发环境可在IDE中配置环境变量
+    # 生产环境应在启动脚本或环境变量中设置此值
+    accessKeyId: ${ALIYUN_OSS_ACCESS_KEY_ID:}
+    accessKeySecret: ${ALIYUN_OSS_ACCESS_KEY_SECRET:}

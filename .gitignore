@@ -1,0 +1,9 @@
+.vscode
+
+frontend/node_modules
+
+# 忽略后端的构建输出
+backend/target
+backend/.idea/
+
+*.log
