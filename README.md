@@ -1,4 +1,5 @@
 # 学校管理系统
+## English introduction below
 
 <p align="center">
   <img src="https://img.shields.io/badge/Java-17-blue.svg">
